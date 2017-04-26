@@ -6,3 +6,8 @@
 4. Copy `local_settings.py.default` as `local_settings.py` and adjust it accordingly
 5. Run database migrations
 6. You're good to go
+
+# Useful links
+
+- [django-hamlpy](https://github.com/nyaruka/django-hamlpy)
+    - [reference](https://github.com/nyaruka/django-hamlpy/blob/master/REFERENCE.md) 
