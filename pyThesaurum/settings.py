@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'thesaurum',
 ]
 
 MIDDLEWARE = [
@@ -45,10 +46,10 @@ TEMPLATES = [
         'DIRS': [],
         'OPTIONS': {
             'loaders': (
-                'django.template.loaders.filesystem.Loader',
-                'django.template.loaders.app_directories.Loader',
                 'hamlpy.template.loaders.HamlPyFilesystemLoader',
                 'hamlpy.template.loaders.HamlPyAppDirectoriesLoader',
+                'django.template.loaders.filesystem.Loader',
+                'django.template.loaders.app_directories.Loader',
             ),
             'context_processors': [
                 'django.template.context_processors.debug',
