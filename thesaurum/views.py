@@ -2,4 +2,4 @@ from django.shortcuts import render
 
 
 def index(request):
-    return render(request, 'thesaurum/index.haml')
+    return render(request, 'index.html')

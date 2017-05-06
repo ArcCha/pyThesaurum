@@ -15,8 +15,14 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
+from registration.backends.default.views import RegistrationView
+
+from thesaurum.forms import ExtendedRegistrationForm
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^', include('thesaurum.urls')),
+    url(r'^accounts/', include('registration.backends.simple.urls')),
+    # url(r'^register/$',RegistrationView.as_view(form_class=ExtendedRegistrationForm),
+    #     name='registration_register'),
 ]

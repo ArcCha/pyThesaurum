@@ -1,0 +1,50 @@
+input{
+   width: 100%;
+   font-size: 25px;
+    height: auto;
+}
+
+input[type=submit].btn-block {
+    width: 100%;
+}
+
+#loginRegisterSection {
+  position: relative;
+  z-index: 2;
+  float: right;
+  overflow: auto;
+  width: calc(100% - 260px);
+  min-height: 100%;
+}
+
+#loginRegisterSection {
+    -webkit-transition-property: top,bottom;
+  transition-property: top,bottom;
+  -webkit-transition-duration: .2s,.2s;
+  transition-duration: .2s,.2s;
+  -webkit-transition-timing-function: linear,linear;
+  transition-timing-function: linear,linear;
+  -webkit-overflow-scrolling: touch;
+}
+
+.row {
+    margin-left: 0px;
+    margin-right: 0px;
+}
+
+label.control-label {
+    font-size: 20px;
+}
+
+#baseSidebar {
+    position: fixed;
+    background-image: url("../img/sidebar.jpg");
+}
+
+#error_1_id_username {
+    font-size: 12px;
+}
+
+#loginRow {
+    margin-top:5%;
+}
