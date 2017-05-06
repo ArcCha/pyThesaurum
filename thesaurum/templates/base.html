@@ -67,7 +67,30 @@
 
 	    	<div class="sidebar-wrapper">
 	            <ul class="nav">
-	                <li class="active">
+                    {%  if user.is_authenticated %}
+
+                        <li class="active">
+	                    <a href="{% url 'index' %}">
+	                        <i class="material-icons">dashboard</i>
+	                        <p>Main Page</p>
+	                    </a>
+	                </li>
+	                <li>
+	                    <a href="{% url 'mypage' %}">
+	                        <i class="material-icons">assignment</i>
+	                        <p>Twoje konto</p>
+	                    </a>
+	                </li>
+	                <li>
+	                    <a href="{% url 'auth_logout' %}">
+	                        <i class="material-icons">person</i>
+	                        <p>Wyloguj</p>
+	                    </a>
+	                </li>
+
+                    {% else %}
+
+                        <li class="active">
 	                    <a href="{% url 'index' %}">
 	                        <i class="material-icons">dashboard</i>
 	                        <p>Main Page</p>
@@ -85,6 +108,8 @@
 	                        <p>Logowanie</p>
 	                    </a>
 	                </li>
+                    {% endif %}
+
 {#	                <li>#}
 {#	                    <a href="typography.html">#}
 {#	                        <i class="material-icons">library_books</i>#}

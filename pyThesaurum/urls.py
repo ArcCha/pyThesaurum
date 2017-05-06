@@ -23,6 +23,4 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^', include('thesaurum.urls')),
     url(r'^accounts/', include('registration.backends.simple.urls')),
-    # url(r'^register/$',RegistrationView.as_view(form_class=ExtendedRegistrationForm),
-    #     name='registration_register'),
 ]
