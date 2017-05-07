@@ -25,6 +25,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'widget_tweaks',
+    # 'label_tag_attr',
     'thesaurum',
     'registration',
     'crispy_forms',

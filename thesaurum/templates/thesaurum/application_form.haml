@@ -1,0 +1,152 @@
+- load widget_tweaks
+-# - load label_tag_attr
+
+%form
+  .row
+    .col-sm-12
+      = form.non_field_errors
+  .row
+    .col-sm-12
+      .form-group.label-floating
+        = form.name.errors
+        %label(class="control-label") Project name
+        - render_field form.name class+="form-control"
+  .row
+    .col-sm-12
+      %h3 Organizer
+  .row
+    .col-sm-12
+      .form-group.label-floating
+        = form.faculty.errors
+        %label(class="control-label") Faculty
+        - render_field form.faculty class+="form-control"
+  .row  
+    .col-sm-4
+      .form-group.label-floating
+        = form.coordinator.errors
+        %label(class="control-label") Project coordinator
+        - render_field form.coordinator class+="form-control"
+    .col-sm-4
+      .form-group.label-floating
+        = form.coordinator_phone.errors
+        %label(class="control-label") Phone number
+        - render_field form.coordinator_phone class+="form-control"
+    .col-sm-4
+      .form-group.label-floating
+        = form.coordinator_email.errors
+        %label(class="control-label") Email
+        - render_field form.coordinator_email class+="form-control"
+  .row
+    .col-sm-12
+      %h3 Project
+  .row
+    .col-sm-4
+      .form-group.checkbox
+        = form.recurring.errors
+        %label
+          - render_field form.recurring
+          Recurring
+    .col-sm-4
+      .form-group.label-floating
+        = form.previous_subsidy.errors
+        %label(class="control-label") Amount of previous subsidy
+        - render_field form.previous_subsidy class+="form-control"
+    .col-sm-4
+      .form-group.label-floating
+        = form.previous_subsidy_date.errors
+        %label(class="control-label") Date of previous subsidy
+        - render_field form.previous_subsidy_date class+="form-control"
+  .row
+    .col-sm-6
+      .form-group.label-floating
+        = form.date.errors
+        %label(class="control-label") Date
+        - render_field form.date class+="form-control"
+    .col-sm-6
+      .form-group.label-floating
+        = form.place.errors
+        %label(class="control-label") Place
+        - render_field form.place class+="form-control"
+  .row
+    .col-sm-12
+      .form-group.label-floating
+        = form.description.errors
+        %label(class="control-label") Description
+        - render_field form.description class+="form-control"
+  .row
+    .col-sm-12
+      %h3 Target group
+  .row
+    .col-sm-6
+      .form-group.label-floating
+        = form.uj_attendees.errors
+        %label(class="control-label") Number of Jagiellonian University students
+        - render_field form.uj_attendees class+="form-control"
+    .col-sm-6
+      .form-group.label-floating
+        = form.other_attendees.errors
+        %label(class="control-label") Number of other attendees
+        - render_field form.other_attendees class+="form-control"
+  .row
+    .col-sm-12
+      .form-group.label-floating
+        = form.target_group_justification.errors
+        %label(class="control-label") Target group justification
+        - render_field form.target_group_justification class+="form-control"
+  .row
+    .col-sm-12
+      .form-group.label-floating
+        = form.project_goals.errors
+        %label(class="control-label") Project goals
+        - render_field form.project_goals class+="form-control"
+  .row
+    .col-sm-12
+      .form-group.label-floating
+        = form.work_plan.errors
+        %label(class="control-label") Plan of work
+        - render_field form.work_plan class+="form-control"
+  .row
+    .col-sm-12
+      .form-group.label-floating
+        = form.project_value.errors
+        %label(class="control-label") Project value for the promotion of Jagiellonian Univeristy
+        - render_field form.project_value class+="form-control"
+  .row
+    .col-sm-12
+      .form-group.label-floating
+        = form.support_visibility.errors
+        %label(class="control-label") Visibility of Self-governing Students Union support
+        - render_field form.support_visibility class+="form-control"
+  .row
+    .col-sm-12
+      .form-group.label-floating
+        = form.cooperating_organizations.errors
+        %label(class="control-label") Other cooperating organizations
+        - render_field form.cooperating_organizations class+="form-control"
+  .row
+    .col-sm-12
+      %h4 Project scope
+      = form.scope.errors
+  .row
+    - for radio in form.scope
+      .col-sm-3
+        .form-group.radio
+          - render_field radio
+  .row
+    .col-sm-12
+      .form-group.label-floating
+        = form.programme.errors
+        %label(class="control-label") Project programme
+        - render_field form.programme class+="form-control"
+  .row
+    .col-sm-6
+      .form-group.label-floating
+        = form.overall_cost.errors
+        %label(class="control-label") Overall cost
+        - render_field form.overall_cost class+="form-control"
+    .col-sm-6
+      .form-group.label-floating
+        = form.requested_subsidy.errors
+        %label(class="control-label") Requested subsidy
+        - render_field form.requested_subsidy class+="form-control"
+
