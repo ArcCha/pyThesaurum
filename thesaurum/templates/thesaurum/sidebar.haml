@@ -18,7 +18,7 @@
         %li
           %a(href="{% url 'auth_logout' %}")
             %i.material-icons person
-            %p Logout
+            %p Logout {{user.username}}
       - else
         %li.active
           %a(href="{% url 'index' %}")
