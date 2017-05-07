@@ -1,0 +1,34 @@
+.sidebar(id="baseSidebar" data-color="purple")
+  -#Tip 1: You can change the color of the sidebar using: data-color="purple | blue | green | orange | red"
+  -#Tip 2: you can also add an image using data-image tag
+  .logo
+    %a.simple-text(href="http://www.creative-tim.com")
+      Creative Tim
+  .sidebar-wrapper
+    %ul.nav
+      - if user.is_authenticated
+        %li.active
+          %a(href="{% url 'index' %}")
+            %i.material-icons dashboard
+            %p Dashboard
+        %li
+          %a(href="{% url 'mypage' %}")
+            %i.material-icons assignment
+            %p Your account
+        %li
+          %a(href="{% url 'auth_logout' %}")
+            %i.material-icons person
+            %p Logout
+      - else
+        %li.active
+          %a(href="{% url 'index' %}")
+            %i.material-icons dashboard
+            %p Dasboard
+        %li.active
+          %a(href="{% url 'registration_register' %}")
+            %i.material-icons assignment
+            %p Registration
+        %li.active
+          %a(href="{% url 'auth_login' %}")
+            %i.material-icons person
+            %p Login

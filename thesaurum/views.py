@@ -3,9 +3,9 @@ from django.shortcuts import render
 
 
 def index(request):
-    return render(request, 'index.html')
+    return render(request, 'thesaurum/index.haml')
+
 
 @login_required
 def userPage(request):
-    return render(request, 'mypage.html')
-
+    return render(request, 'thesaurum/mypage.haml')
