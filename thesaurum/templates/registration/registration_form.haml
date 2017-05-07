@@ -1,24 +1,52 @@
 - extends "base.html"
 - load i18n
-- load crispy_forms_tags
+- load widget_tweaks
 
 
 - block body
-  .container-fluid
-    %section(class="row row-padded" id="loginRegisterSection")
-      .col-sm-6.col-sm-offset-3
-        %h1 Rejestracja
-        %form(method="post" action=".")
-          - csrf_token
-          = form|crispy
-          %input(class="btn btn-block btn-primary" type="submit" value="{% trans 'OK' %}")
-    %hr
+
+
+  %form(method="post" action=".")
+    - csrf_token
     .row
-      .col-sm-6.col-sm-offset-3.text-align-center
+      .col-sm-12
+        .form-group.label-floating
+          = form.name.errors
+          %label(class="control-label") Username
+          - render_field form.username class+="form-control"
+          %p {{ form.username.errors.as_text }}
+    .row
+      .col-sm-12
+        .form-group.label-floating
+          = form.name.errors
+          %label(class="control-label") Password
+          - render_field form.password1 class+="form-control"
+          %p {{ form.password1.errors.as_text }}
+    .row
+      .col-sm-12
+        .form-group.label-floating
+          = form.name.errors
+          %label(class="control-label") Password confirmation
+          - render_field form.password2 class+="form-control"
+          %p {{ form.password2.errors.as_text }}
+    .row
+      .col-sm-12
+        .form-group.label-floating
+          = form.name.errors
+          %label(class="control-label") Email
+          - render_field form.email class+="form-control"
+          %p {{ form.email.errors.as_text }}
+    .row
+      .col-sm-12
+        .form-group.label-floating
+          = form.name.errors
+          %div
+            %input{:class => "btn btn-block btn-primary", :type => "submit", :value => "register"}/
+            %input{:name => "next", :type => "hidden", :value => "{{ next }}"}/
+    .row
+      .col-sm-12
         %p
-          Masz już konto?
-            %a(href="{% url 'auth_login' %}")Zaloguj się
-          !
+          %a(href="{% url 'auth_login' %}")Login!
 
 {% comment %}
 **registration/registration_form.html**
