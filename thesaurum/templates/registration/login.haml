@@ -1,31 +1,30 @@
 - extends "base.html"
 - load i18n
-- load crispy_forms_tags
+- load widget_tweaks
 
 
 - block body
-  .container-fluid
-    #loginRow.row
-      %section(id="loginRegisterSection")
-        .col-sm-6.col-sm-offset-3
-          %h1 Logowanie
-          %form(method="post" action=".")
-            - csrf_token
-            = form|crispy
-            %input(class="btn btn-block btn-primary" type="submit" value="{% trans 'OK' %}")
-            %input(type="hidden" name="next" value="{{ next }}")
-    %hr
+  %form(method="post" action=".")
+    - csrf_token
     .row
-      .col-sm-6.col-sm-offset-3.text-align-center
-        %p
-          {% trans "Zapomniałeś hasła" %}?
-          %a(href="{% url 'auth_password_reset' %}") {% trans "Zresetuj je" %}
-          !
-        %p
-          {% trans "Nie masz konta" %}?
-          %a(href="{% url 'registration_register' %}") {% trans "Zarejestruj się" %}
-          !
-
+      .col-sm-12
+        .form-group.label-floating
+          = form.name.errors
+          %label(class="control-label") Username
+          - render_field form.username class+="form-control"
+    .row
+      .col-sm-12
+        .form-group.label-floating
+          = form.name.errors
+          %label(class="control-label") Password
+          - render_field form.password class+="form-control"
+    .row
+      .col-sm-12
+        .form-group.label-floating
+          = form.name.errors
+          %div
+            %input{:class => "btn btn-block btn-primary", :type => "submit", :value => "login"}/
+            %input{:name => "next", :type => "hidden", :value => "{{ next }}"}/
 {% comment %}
 **registration/login.html**
 
