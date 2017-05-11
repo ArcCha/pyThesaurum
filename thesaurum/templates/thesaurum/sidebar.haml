@@ -12,10 +12,6 @@
             %i.material-icons dashboard
             %p Dashboard
         %li
-          %a(href="{% url 'mypage' %}")
-            %i.material-icons assignment
-            %p Your account
-        %li
           %a(href="{% url 'auth_logout' %}")
             %i.material-icons person
             %p Logout {{user.username}}
