@@ -43,7 +43,7 @@ def application_list(request):
     return render(request, 'thesaurum/application_list.haml', {'apps': apps})
 
 @login_required
-def simple_upload(request):
+def simple_upload(request, id):
     if request.method == 'POST' and request.FILES['myfile']:
         myfile = request.FILES['myfile']
         fs = FileSystemStorage(location='uploads/folder1')
