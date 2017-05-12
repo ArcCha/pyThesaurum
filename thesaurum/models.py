@@ -7,28 +7,34 @@ class Application(models.Model):
               ('environmental', 'Environmental'),
               ('university', 'University')]
 
-    name = models.CharField(max_length=200, blank=True)
-    faculty = models.CharField(max_length=200, blank=True)
-    coordinator = models.CharField(max_length=200, blank=True)
-    coordinator_phone = models.CharField(max_length=20, blank=True)
-    coordinator_email = models.EmailField(blank=True)
-    recurring = models.BooleanField(blank=True)
-    previous_subsidy = models.DecimalField(max_digits=10, decimal_places=2, blank=True)
-    previous_subsidy_date = models.DateField(blank=True)
-    date = models.DateField(blank=True)
-    place = models.CharField(max_length=200, blank=True)
-    description = models.TextField(blank=True)
-    uj_attendees = models.IntegerField(blank=True)
-    other_attendees = models.IntegerField(blank=True)
-    target_group_justification = models.TextField(blank=True)
-    project_goals = models.TextField(blank=True)
-    work_plan = models.TextField(blank=True)
-    project_value = models.TextField(blank=True)
-    support_visibility = models.TextField(blank=True)
-    cooperating_organizations = models.TextField(blank=True)
-    scope = models.CharField(max_length=50, choices=SCOPES, blank=False,
+    name = models.CharField(max_length=200, null=True, blank=True)
+    faculty = models.CharField(max_length=200, null=True, blank=True)
+    coordinator = models.CharField(max_length=200, null=True, blank=True)
+    coordinator_phone = models.CharField(max_length=20, null=True, blank=True)
+    coordinator_email = models.EmailField(null=True, blank=True)
+    recurring = models.BooleanField(default=True, blank=True)
+    previous_subsidy = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    previous_subsidy_date = models.DateField(null=True, blank=True)
+    date = models.DateField(null=True, blank=True)
+    place = models.CharField(max_length=200, null=True, blank=True)
+    description = models.TextField(null=True, blank=True)
+    uj_attendees = models.IntegerField(null=True, blank=True)
+    other_attendees = models.IntegerField(null=True, blank=True)
+    target_group_justification = models.TextField(null=True, blank=True)
+    project_goals = models.TextField(null=True, blank=True)
+    work_plan = models.TextField(null=True, blank=True)
+    project_value = models.TextField(null=True, blank=True)
+    support_visibility = models.TextField(null=True, blank=True)
+    cooperating_organizations = models.TextField(null=True, blank=True)
+    scope = models.CharField(max_length=50, choices=SCOPES, null=False,
                              default='university')
-    programme = models.TextField(blank=True)
-    overall_cost = models.DecimalField(max_digits=10, decimal_places=2, blank=True)
-    requested_subsidy = models.DecimalField(max_digits=10, decimal_places=2, blank=True)
-    submitted = models.BooleanField(blank=True)
+    programme = models.TextField(null=True, blank=True)
+    overall_cost = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    requested_subsidy = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    submitted = models.BooleanField(default=False, blank=True)
+
+    class Meta:
+        permissions = (
+            ('view_application', 'View application'),
+            ('edit_application', 'Edit application'),
+        )

@@ -1,0 +1,10 @@
+- extends "base.html"
+
+.container-fluid
+  .row
+    .col-sm-12
+      - block body
+        %ul
+          - for app in apps
+            %h3
+              = app.id

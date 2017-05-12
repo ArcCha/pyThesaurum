@@ -1,7 +1,8 @@
 - load widget_tweaks
 -# - load label_tag_attr
 
-%form
+%form(method="post")
+  - csrf_token
   .row
     .col-sm-12
       = form.non_field_errors
