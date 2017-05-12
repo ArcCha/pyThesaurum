@@ -19,3 +19,12 @@ label.control-label {
 #error_1_id_username {
     font-size: 12px;
 }
+
+#file-7 {
+	width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}
