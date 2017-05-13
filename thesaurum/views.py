@@ -54,7 +54,13 @@ def grading_new(request, id_app):
     else:
         form = GradingForm()
 
-    return render(request, 'thesaurum/grading_new.haml', {'form': form})
+    return render(request, 'thesaurum/grading_new.haml', {
+        'form': form,
+        'first_question': 'Pytanie 1',
+        'second_question': 'Pytanie 2',
+        'third_question': 'Pytanie 3',
+        'fourth_question': 'Pytanie 4'
+    })
 
 @login_required
 def application_list(request):
