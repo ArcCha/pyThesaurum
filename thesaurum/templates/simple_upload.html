@@ -13,4 +13,9 @@
   {% if file_name %}
     <p>File {{ file_name }} uploaded.</p>
   {% endif %}
+    <p>Uploaded files:</p>
+    {% for file in  files %}
+        <p><a href="/{{ file.path }}">{{ file.name }}</a></p>
+    {% endfor %}
+
 {% endblock %}

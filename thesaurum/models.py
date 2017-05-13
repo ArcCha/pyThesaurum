@@ -47,3 +47,8 @@ class Grading(models.Model):
     second_question = models.BooleanField(default=False)
     third_question = models.BooleanField(default=False)
     fourth_question = models.BooleanField(default=False)
+
+class File(models.Model):
+    path = models.CharField(max_length=200, null=True, blank=True, default="")
+    name = models.CharField(max_length=200, null=True, blank=True, default="")
+    application = models.ForeignKey(Application, default= None)

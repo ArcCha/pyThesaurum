@@ -7,7 +7,8 @@ from django.contrib.auth.models import User
 from guardian.shortcuts import assign_perm, get_objects_for_user
 from django.urls import reverse
 
-from thesaurum.models import Application
+
+from thesaurum.models import Application, File
 from .forms import ApplicationForm, GradingForm
 
 
@@ -65,18 +66,35 @@ def grading_new(request, id_app):
 @login_required
 def application_list(request):
     apps = get_objects_for_user(request.user, 'thesaurum.view_application')
-    return render(request, 'thesaurum/application_list.haml', {'apps': apps})
+    return render(request, 'thesaurum/application_list.haml', {
+        'apps': apps,
+    })
 
 @login_required
-def simple_upload(request, id):
+def simple_upload(request, app_id):
+    files = File.objects.filter(application=Application.objects.get(id=app_id)).values()
     if request.method == 'POST' and request.FILES['myfile']:
         myfile = request.FILES['myfile']
-        fs = FileSystemStorage(location='uploads/'+id)
+        fs = FileSystemStorage(location='uploads/' + app_id)
         filename = fs.save(myfile.name, myfile)
         uploaded_file_url = fs.url(filename)
-        print(uploaded_file_url)
+        print("uploads/" + app_id + "/" + filename)
+        file_ob = File()
+        file_ob.application = Application.objects.get(id = app_id)
+        file_ob.path = "uploads/" + app_id + "/" + filename
+        file_ob.name = filename
+        file_ob.save()
         return render(request, 'simple_upload.html', {
             'uploaded_file_url': uploaded_file_url,
-            'file_name': myfile.name
+            'file_name': myfile.name,
+            'files': files
         })
-    return render(request, 'simple_upload.html')
+    return render(request, 'simple_upload.html', {'files': files})
+
+@login_required
+def show_all_uploaded_files_for_application(request, app_id):
+    files = File.objects.filter(application = Application.objects.get(id = app_id)).values()
+    print(files)
+    return render(request, 'thesaurum/files_list.haml', {
+        'files': files,
+    })
