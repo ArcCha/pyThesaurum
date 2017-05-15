@@ -1,4 +1,5 @@
 from django.core.files.storage import FileSystemStorage
+from django.forms import Form
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
@@ -88,31 +89,39 @@ def application_list(request):
 
 @login_required
 def application_details(request, app_id):
+    files = File.objects.filter(application=Application.objects.get(id=app_id)).values()
     app = Application.objects.get(pk=app_id)
     form = ApplicationForm(instance=app)
     for b in form:
         b.field.widget.attrs['disabled'] = True
-    return render(request, 'thesaurum/application_details.haml', {'form': form, 'app_id': app.id, 'state': app.state})
+    return render(request, 'thesaurum/application_details.haml', {'form': form, 'app_id': app.id, 'state': app.state, 'files':files})
 
 @login_required
 def simple_upload(request, app_id):
+    # form = Form(request.POST)
     files = File.objects.filter(application=Application.objects.get(id=app_id)).values()
-    if request.method == 'POST' and request.FILES['myfile']:
-        myfile = request.FILES['myfile']
-        fs = FileSystemStorage(location='uploads/' + app_id)
-        filename = fs.save(myfile.name, myfile)
-        uploaded_file_url = fs.url(filename)
-        print("uploads/" + app_id + "/" + filename)
-        file_ob = File()
-        file_ob.application = Application.objects.get(id = app_id)
-        file_ob.path = "uploads/" + app_id + "/" + filename
-        file_ob.name = filename
-        file_ob.save()
-        return render(request, 'simple_upload.html', {
-            'uploaded_file_url': uploaded_file_url,
-            'file_name': myfile.name,
-            'files': files
-        })
+    if request.method == 'POST':
+        if 'myfile' in request.FILES.keys() and Form(request.POST).is_valid():
+            myfile = request.FILES['myfile']
+            fs = FileSystemStorage(location='uploads/' + app_id)
+            filename = fs.save(myfile.name, myfile)
+            uploaded_file_url = fs.url(filename)
+            print("uploads/" + app_id + "/" + filename)
+            file_ob = File()
+            file_ob.application = Application.objects.get(id = app_id)
+            file_ob.path = "uploads/" + app_id + "/" + filename
+            file_ob.name = filename
+            file_ob.save()
+            return render(request, 'simple_upload.html', {
+                'uploaded_file_url': uploaded_file_url,
+                'file_name': myfile.name,
+                'files': files
+            })
+        else:
+            return render(request, 'simple_upload.html', {
+                'files': files,
+                'errors': "Please choose a file"
+            })
     return render(request, 'simple_upload.html', {'files': files})
 
 @login_required

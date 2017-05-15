@@ -10,3 +10,8 @@
           %a(href="{% url 'application_submit' app_id %}" class="btn btn-default") Submit
           %a(href="{% url 'grading_new' app_id %}" class="btn btn-default") Grade
           %a(href="{% url 'upload' app_id %}" class="btn btn-default") Upload
+        %p Uploaded files:
+        {% for file in  files %}
+        %p
+        %a{:href => "/{{ file.path }}"} {{ file.name }}
+        {% endfor %}
