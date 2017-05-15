@@ -1,12 +1,18 @@
 - extends 'base.html'
+- load guardian_tags
 
 .container-fluid
   .row
     .col-sm-12
       - block body
+        - get_obj_perms user for app as "app_perms"
         - include 'thesaurum/application_form_body.haml'
-        - if state == 'new'
-          %a(href="{% url 'application_edit' app_id %}" class="btn btn-default") Edit
-          %a(href="{% url 'application_submit' app_id %}" class="btn btn-default") Submit
-          %a(href="{% url 'grading_new' app_id %}" class="btn btn-default") Grade
-          %a(href="{% url 'upload' app_id %}" class="btn btn-default") Upload
+        - if app.state == 'new'
+          - if "change_application" in app_perms
+            %a(href="{% url 'application_edit' app.id %}" class="btn btn-default") Edit
+          - if app.owner == user
+            %a(href="{% url 'application_submit' app.id %}" class="btn btn-default") Submit
+          - if "change_application" in app_perms
+            %a(href="{% url 'upload' app.id %}" class="btn btn-default") Upload
+          - if app.state == "accepted" and "grade_application" in app_perms
+            %a(href="{% url 'grading_new' app.id %}" class="btn btn-default") Grade

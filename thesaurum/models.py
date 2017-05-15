@@ -8,14 +8,15 @@ class Application(models.Model):
               ('environmental', 'Environmental'),
               ('university', 'University')]
     STATE = [('new', 'New'),
-             ('submitted', 'Submitted')]
+             ('submitted', 'Submitted'),
+             ('accepted', 'Accepted')]
 
     name = models.CharField(max_length=200, null=True, blank=True)
     faculty = models.CharField(max_length=200, null=True, blank=True)
     coordinator = models.CharField(max_length=200, null=True, blank=True)
     coordinator_phone = models.CharField(max_length=20, null=True, blank=True)
     coordinator_email = models.EmailField(null=True, blank=True)
-    recurring = models.BooleanField(default=True, blank=True)
+    recurring = models.BooleanField(default=False, blank=True)
     previous_subsidy = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     previous_subsidy_date = models.DateField(null=True, blank=True)
     date = models.DateField(null=True, blank=True)
@@ -34,14 +35,15 @@ class Application(models.Model):
     programme = models.TextField(null=True, blank=True)
     overall_cost = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     requested_subsidy = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
-    submitted = models.BooleanField(default=False, blank=True)
     state = models.CharField(max_length=20, choices=STATE, null=False,
                              default='new')
+    owner = models.ForeignKey(User)
 
     class Meta:
         permissions = (
             ('view_application', 'View application'),
             ('edit_application', 'Edit application'),
+            ('grade_application', 'Can grade application'),
         )
 
     def __str__(self):

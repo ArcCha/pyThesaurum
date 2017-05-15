@@ -42,6 +42,7 @@ def application_edit(request, app_id=None):
         form = ApplicationForm(instance=app)
     return render(request, 'thesaurum/application_edit.haml', {'form': form})
 
+
 @login_required
 def grading_new(request, app_id):
 
@@ -79,6 +80,7 @@ def grading_new(request, app_id):
         'fourth_question': 'Pytanie 4'
     })
 
+
 @login_required
 def application_list(request):
     apps = get_objects_for_user(request.user, 'thesaurum.view_application')
@@ -86,13 +88,18 @@ def application_list(request):
         'apps': apps,
     })
 
+
 @login_required
 def application_details(request, app_id):
     app = Application.objects.get(pk=app_id)
     form = ApplicationForm(instance=app)
     for b in form:
         b.field.widget.attrs['disabled'] = True
-    return render(request, 'thesaurum/application_details.haml', {'form': form, 'app_id': app.id, 'state': app.state})
+    return render(request, 'thesaurum/application_details.haml', {
+        'form': form,
+        'app': app,
+    })
+
 
 @login_required
 def simple_upload(request, app_id):
