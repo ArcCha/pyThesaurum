@@ -6,6 +6,8 @@ class Application(models.Model):
               ('nationwide', 'Nationwide'),
               ('environmental', 'Environmental'),
               ('university', 'University')]
+    STATE = [('new', 'New'),
+             ('submitted', 'Submitted')]
 
     name = models.CharField(max_length=200, null=True, blank=True)
     faculty = models.CharField(max_length=200, null=True, blank=True)
@@ -32,6 +34,8 @@ class Application(models.Model):
     overall_cost = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     requested_subsidy = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     submitted = models.BooleanField(default=False, blank=True)
+    state = models.CharField(max_length=20, choices=STATE, null=False,
+                             default='new')
 
     class Meta:
         permissions = (

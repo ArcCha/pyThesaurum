@@ -1,0 +1,10 @@
+- extends 'base.html'
+
+.container-fluid
+  .row
+    .col-sm-12
+      - block body
+        - include 'thesaurum/application_form_body.haml'
+        - if state == 'new'
+          %a(href="{% url 'application_edit' app_id %}" class="btn btn-default") Edit
+          %a(href="{% url 'application_submit' app_id %}" class="btn btn-default") Submit

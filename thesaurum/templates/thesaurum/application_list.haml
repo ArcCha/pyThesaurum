@@ -7,4 +7,5 @@
         %ul
           - for app in apps
             %h3
-              = app.id
+              %a(href="{% url 'application_details' app.id %}")
+                = app.name
