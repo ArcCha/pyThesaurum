@@ -54,10 +54,16 @@ class Application(models.Model):
 class Grading(models.Model):
     application = models.ForeignKey(Application)
     user = models.ForeignKey(User)
-    first_question = models.BooleanField(default=False)
-    second_question = models.BooleanField(default=False)
-    third_question = models.BooleanField(default=False)
-    fourth_question = models.BooleanField(default=False)
+    project_rational = models.BooleanField(default=False)
+    project_justified = models.BooleanField(default=False)
+    cost_rational = models.BooleanField(default=False)
+    cost_justified = models.BooleanField(default=False)
+    comment = models.TextField()
+
+    class Meta:
+        permissions = (
+            ('view_grading', 'View grading'),
+        )
 
     def __str__(self):
         return self.application.name + " " + self.user.username

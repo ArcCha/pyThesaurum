@@ -22,6 +22,8 @@ urlpatterns = [
         views.application_accept, name="application_accept"),
     url(r'^applications/(?P<app_id>\d+)/return_back$',
         views.application_return_back, name="application_return_back"),
+    url(r'^applications/(?P<app_id>\d+)/grades$',
+        views.application_grades, name="application_grades"),
     url(r'^applications/(?P<app_id>\d+)/files/$',
         views.show_all_uploaded_files_for_application, name="files"),
     url(r'^uploads/(?P<path>.*)$', views.protected_serve),

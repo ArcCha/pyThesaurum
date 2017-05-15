@@ -21,3 +21,10 @@
                 %li
                   %a(href="{% url 'application_details' app.id %}")
                     = app.name
+        - if perms.thesaurum.view_grading
+          %h2 Application grades
+            %ul
+              - for app in graded_apps
+                %li
+                  %a(href="{% url 'application_grades' app.id %}")
+                    = app.name

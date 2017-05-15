@@ -17,9 +17,11 @@ from .forms import ApplicationForm, GradingForm
 def index(request):
     submitted_apps = Application.objects.filter(state='submitted')
     to_grade_apps = Application.objects.filter(state='accepted')
+    graded_apps = Application.objects.filter(state='accepted')
     return render(request, 'thesaurum/index.haml', {
         'submitted_apps': submitted_apps,
         'to_grade_apps': to_grade_apps,
+        'graded_apps': graded_apps,
     })
 
 
@@ -109,6 +111,20 @@ def application_return_back(request, app_id):
     app.state = 'new'
     app.save()
     return HttpResponseRedirect(reverse('application_details', args=[app_id]))
+
+
+@login_required
+def application_grades(request, app_id):
+    grades = Grading.objects.filter(application__id=app_id)
+    grades_count = grades.count()
+    return render(request, 'thesaurum/grades.haml', {
+        'grades': grades,
+        'grades_count': grades_count,
+        'project_rational': Grading.objects.filter(application__id=app_id, project_rational=True).count(),
+        'project_justified': Grading.objects.filter(application__id=app_id, project_justified=True).count(),
+        'cost_rational': Grading.objects.filter(application__id=app_id, cost_rational=True).count(),
+        'cost_justified': Grading.objects.filter(application__id=app_id, cost_justified=True).count(),
+    })
 
 
 @login_required

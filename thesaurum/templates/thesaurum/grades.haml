@@ -1,7 +1,86 @@
+- extends "base.html"
+- load thesaurum_extras
+
 .container-fluid
-  .row
-    .col-sm-12
-      - block body
+  - block body
+    .row
+      .col-sm-12
         - for grade in grades
-          %div
-            grade.
+          .card
+            .card-header
+              = grade.user
+            .card-content
+              = grade.comment
+    .row
+      .col-sm-6    
+        .card
+          .card-header.card-chart
+            #project-rational.ct-chart
+          .card-content
+            %h4.title Project rational
+      .col-sm-6
+        .card
+          .card-header.card-chart
+            #project-justified.ct-chart
+          .card-content
+            %h4.title Project justified
+    .row  
+      .col-sm-6 
+        .card
+          .card-header.card-chart
+            #cost-rational.ct-chart
+          .card-content
+            %h4.title Cost rational
+      .col-sm-6  
+        .card
+          .card-header.card-chart
+            #cost-justified.ct-chart
+          .card-content
+            %h4.title Cost justified
+
+- block scripts
+  %script
+    $(document).ready(function() {
+      var q1_data = {
+        labels: ['Yes', 'No'],
+        series: [ {{ project_rational }}, {{ grades_count|subtract:project_rational }}]
+      };
+      var q2_data = {
+        labels: ['Yes', 'No'],
+        series: [ {{ project_justified }}, {{ grades_count|subtract:project_justified }}]
+      };
+      var q3_data = {
+        labels: ['Yes', 'No'],
+        series: [ {{ cost_rational }}, {{ grades_count|subtract:cost_rational }}]
+      };
+      var q4_data = {
+        labels: ['Yes', 'No'],
+        series: [ {{ cost_justified }}, {{ grades_count|subtract:cost_justified }}]
+      };
+
+      var options = {
+        labelInterpolationFnc: function(value) {
+          return value[0]
+        }
+      };
+
+      var responsiveOptions = [
+        ['screen and (min-width: 640px)', {
+          chartPadding: 30,
+          labelOffset: 100,
+          labelDirection: 'explode',
+          labelInterpolationFnc: function(value) {
+            return value;
+          }
+        }],
+        ['screen and (min-width: 1024px)', {
+          labelOffset: 80,
+          chartPadding: 20
+        }]
+      ];
+
+      new Chartist.Pie('#project-rational', q1_data, options, responsiveOptions);
+      new Chartist.Pie('#project-justified', q2_data, options, responsiveOptions);
+      new Chartist.Pie('#cost-rational', q3_data, options, responsiveOptions);
+      new Chartist.Pie('#cost-justified', q4_data, options, responsiveOptions);
+    });

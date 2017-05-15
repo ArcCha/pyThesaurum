@@ -7,11 +7,6 @@ class ExtendedRegistrationForm(RegistrationForm):
     first_name = forms.CharField(widget=forms.TextInput(attrs={'label': 'first_name'}))
     last_name = forms.CharField(widget=forms.TextInput(attrs={'label': 'last_name'}))
 
-class ApplicationForm(forms.Form):
-    SCOPES = [('international', 'International'),
-              ('nationwide', 'Nationwide'),
-              ('environmental', 'Environmental'),
-              ('university', 'University')]
 
 class ApplicationForm(forms.ModelForm):
 
@@ -29,12 +24,14 @@ class ApplicationForm(forms.ModelForm):
             'scope': forms.RadioSelect,
         }
 
+
 class UploadFileForm(forms.Form):
     title = forms.CharField(max_length=50)
     file = forms.FileField()
+
 
 class GradingForm(forms.ModelForm):
 
     class Meta:
         model = Grading
-        fields = ['first_question','second_question', 'third_question', 'fourth_question']
+        fields = ['project_rational', 'project_justified', 'cost_rational', 'cost_justified', 'comment']
