@@ -9,6 +9,10 @@
         %h4.pull-right
           = app.state
         - include 'thesaurum/application_form_body.haml'
+	%p Uploaded files:
+          - for file in  files
+            %a(href="/{{ file.path }}")
+              = file.name
         - if app.state == 'new'
           - if "change_application" in app_perms
             %a(href="{% url 'application_edit' app.id %}" class="btn btn-default") Edit
