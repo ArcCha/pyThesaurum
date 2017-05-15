@@ -40,8 +40,20 @@ def application_new(request):
 
 @login_required
 def grading_new(request, id_app):
-    print(id_app)
-    print(request.user.id)
+
+    app_to_grade = Application.objects.get(id = id_app)
+    apps = get_objects_for_user(request.user, 'thesaurum.view_application')
+
+    flag = True
+
+    for app in apps:
+        print(app.id)
+        if app.id == app_to_grade.id:
+            flag = False
+
+    if(flag):
+        return render(request, '403.html', status=403)
+
     if request.method == 'POST':
         form = GradingForm(request.POST)
         if form.is_valid():

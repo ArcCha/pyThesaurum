@@ -7,7 +7,8 @@
         %ul
           - for app in apps
             %h3
-              = app.id
+              Application name:
+              = app.name
               %a(href="{{app.id}}/upload") Upload files
               or
               %a(href="{{app.id}}/grade") Add grading
