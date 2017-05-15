@@ -22,5 +22,5 @@ from thesaurum.forms import ExtendedRegistrationForm
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^', include('thesaurum.urls')),
-    url(r'^accounts/', include('registration.backends.simple.urls')),
+    url(r'^accounts/', include('registration.backends.default.urls')),
 ]
