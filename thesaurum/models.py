@@ -44,6 +44,7 @@ class Application(models.Model):
             ('view_application', 'View application'),
             ('edit_application', 'Edit application'),
             ('grade_application', 'Can grade application'),
+            ('change_application_state', 'Can change application state')
         )
 
     def __str__(self):

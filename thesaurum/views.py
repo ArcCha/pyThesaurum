@@ -9,12 +9,17 @@ from guardian.shortcuts import assign_perm, get_objects_for_user
 from django.urls import reverse
 
 from pyThesaurum import settings
-from thesaurum.models import Application, File
+from thesaurum.models import Application, File, Grading
 from .forms import ApplicationForm, GradingForm
 
 
 def index(request):
-    return render(request, 'thesaurum/index.haml')
+    submitted_apps = Application.objects.filter(state='submitted')
+    to_grade_apps = Application.objects.filter(state='accepted')
+    return render(request, 'thesaurum/index.haml', {
+        'submitted_apps': submitted_apps,
+        'to_grade_apps': to_grade_apps,
+    })
 
 
 @login_required
@@ -44,31 +49,15 @@ def application_edit(request, app_id=None):
 
 
 @login_required
-def grading_new(request, app_id):
-
-    app_to_grade = Application.objects.get(id=app_id)
-    apps = get_objects_for_user(request.user, 'thesaurum.view_application')
-
-    flag = True
-
-    for app in apps:
-        print(app.id)
-        if app.id == app_to_grade.id:
-            flag = False
-
-    if(flag):
-        return render(request, '403.html', status=403)
-
+def application_grade(request, app_id):
     if request.method == 'POST':
         form = GradingForm(request.POST)
         if form.is_valid():
-            grading_object = form.save(commit=False)
-            grading_object.user = request.user
-            grading_object.application = Application.objects.get(id=app_id)
-            grading_object.save()
-            return HttpResponseRedirect(reverse('application_list'))
-        else:
-            print(form.errors)
+            grading = form.save(commit=False)
+            grading.user = request.user
+            grading.application = Application.objects.get(pk=app_id)
+            grading.save()
+            return HttpResponseRedirect(reverse('index'))
     else:
         form = GradingForm()
 
@@ -93,12 +82,30 @@ def application_list(request):
 def application_details(request, app_id):
     app = Application.objects.get(pk=app_id)
     form = ApplicationForm(instance=app)
+    can_grade = not Grading.objects.filter(user=request.user, application=app).exists()
     for b in form:
         b.field.widget.attrs['disabled'] = True
     return render(request, 'thesaurum/application_details.haml', {
         'form': form,
         'app': app,
+        'can_grade': can_grade,
     })
+
+
+@login_required
+def application_accept(request, app_id):
+    app = Application.objects.get(pk=app_id)
+    app.state = 'accepted'
+    app.save()
+    return HttpResponseRedirect(reverse('application_details', args=[app_id]))
+
+
+@login_required
+def application_return_back(request, app_id):
+    app = Application.objects.get(pk=app_id)
+    app.state = 'new'
+    app.save()
+    return HttpResponseRedirect(reverse('application_details', args=[app_id]))
 
 
 @login_required

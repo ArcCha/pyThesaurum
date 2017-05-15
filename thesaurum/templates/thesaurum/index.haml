@@ -1,8 +1,23 @@
 - extends "base.html"
+- load guardian_tags
 
 .container-fluid
   .row
     .col-sm-12
       - block body
-        %h1 Dashboard
-        %a(href="{% url 'application_new' %}" class="btn btn-primary") Create application
+        %h2 Dashboard
+          %a(href="{% url 'application_new' %}" class="btn btn-primary") Create application
+        - if perms.thesaurum.change_application_state
+          %h2 Submitted applications
+            %ul
+              - for app in submitted_apps
+                %li
+                  %a(href="{% url 'application_details' app.id %}")
+                    = app.name
+        - if perms.thesaurum.grade_application
+          %h2 Applications to grade
+            %ul
+              - for app in to_grade_apps
+                %li
+                  %a(href="{% url 'application_details' app.id %}")
+                    = app.name

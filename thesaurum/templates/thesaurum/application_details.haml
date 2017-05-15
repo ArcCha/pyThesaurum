@@ -6,6 +6,8 @@
     .col-sm-12
       - block body
         - get_obj_perms user for app as "app_perms"
+        %h4.pull-right
+          = app.state
         - include 'thesaurum/application_form_body.haml'
         - if app.state == 'new'
           - if "change_application" in app_perms
@@ -16,3 +18,8 @@
             %a(href="{% url 'upload' app.id %}" class="btn btn-default") Upload
           - if app.state == "accepted" and "grade_application" in app_perms
             %a(href="{% url 'grading_new' app.id %}" class="btn btn-default") Grade
+        - if app.state == "submitted" and perms.thesaurum.change_application_state
+          %a(href="{% url 'application_accept' app.id %}" class="btn btn-default") Accept
+          %a(href="{% url 'application_return_back' app.id %}" class="btn btn-default") Return back
+        - if app.state == "accepted" and can_grade
+          %a(href="{% url 'application_grade' app.id %}" class="btn btn-default") Grade
