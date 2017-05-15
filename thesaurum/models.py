@@ -44,6 +44,10 @@ class Application(models.Model):
             ('edit_application', 'Edit application'),
         )
 
+    def __str__(self):
+        return self.name
+
+
 class Grading(models.Model):
     application = models.ForeignKey(Application)
     user = models.ForeignKey(User)
@@ -52,7 +56,14 @@ class Grading(models.Model):
     third_question = models.BooleanField(default=False)
     fourth_question = models.BooleanField(default=False)
 
+    def __str__(self):
+        return self.application.name + " " + self.user.username
+
+
 class File(models.Model):
     path = models.CharField(max_length=200, null=True, blank=True, default="")
     name = models.CharField(max_length=200, null=True, blank=True, default="")
-    application = models.ForeignKey(Application, default= None)
+    application = models.ForeignKey(Application, default=None)
+
+    def __str__(self):
+        return self.name
