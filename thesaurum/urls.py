@@ -17,4 +17,6 @@ urlpatterns = [
     url(r'^applications/(?P<app_id>\d+)/upload/$', views.simple_upload, name="upload"),
     url(r'^applications/(?P<app_id>\d+)/grade/$', views.grading_new, name="grading_new"),
     url(r'^applications/(?P<app_id>\d+)/files/$', views.show_all_uploaded_files_for_application, name="files"),
-] + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
+    url(r'^uploads/(?P<path>.*)$', views.protected_serve),
+]
+              # + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

@@ -4,10 +4,11 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.contrib.auth.models import User
+from django.views.static import serve
 from guardian.shortcuts import assign_perm, get_objects_for_user
 from django.urls import reverse
 
-
+from pyThesaurum import settings
 from thesaurum.models import Application, File
 from .forms import ApplicationForm, GradingForm
 
@@ -93,6 +94,7 @@ def application_details(request, app_id):
         b.field.widget.attrs['disabled'] = True
     return render(request, 'thesaurum/application_details.haml', {'form': form, 'app_id': app.id, 'state': app.state})
 
+@login_required
 def simple_upload(request, app_id):
     files = File.objects.filter(application=Application.objects.get(id=app_id)).values()
     if request.method == 'POST' and request.FILES['myfile']:
@@ -127,3 +129,21 @@ def show_all_uploaded_files_for_application(request, app_id):
     return render(request, 'thesaurum/files_list.haml', {
         'files': files,
     })
+
+@login_required
+def protected_serve(request, path, document_root=None, show_indexes=False):
+    id_from_url = path.split('/')[0]
+
+    app_upload = Application.objects.get(id = id_from_url)
+    apps = get_objects_for_user(request.user, 'thesaurum.view_application')
+
+    flag = True
+
+    for app in apps:
+        if app == app_upload:
+            flag = False
+
+    if (flag):
+        return render(request, '403.html', status=403)
+
+    return serve(request, path, settings.MEDIA_URL[1:] , show_indexes)
