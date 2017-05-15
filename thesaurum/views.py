@@ -42,8 +42,11 @@ def application_edit(request, app_id=None):
     if request.method == 'POST':
         form = ApplicationForm(request.POST, instance=app)
         if form.is_valid():
+            form.owner = request.user
             owner = request.user
-            app = form.save()
+            app = form.save(commit=False)
+            app.owner = owner
+            app.save()
             assign_perm('view_application', owner, app)
             return HttpResponseRedirect(reverse('application_list'))
     else:
