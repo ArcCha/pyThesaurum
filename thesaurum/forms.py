@@ -1,12 +1,17 @@
 from registration.forms import RegistrationForm
 from django import forms
-from .models import Application
+from .models import Application, Grading
 
 
 class ExtendedRegistrationForm(RegistrationForm):
     first_name = forms.CharField(widget=forms.TextInput(attrs={'label': 'first_name'}))
     last_name = forms.CharField(widget=forms.TextInput(attrs={'label': 'last_name'}))
 
+class ApplicationForm(forms.Form):
+    SCOPES = [('international', 'International'),
+              ('nationwide', 'Nationwide'),
+              ('environmental', 'Environmental'),
+              ('university', 'University')]
 
 class ApplicationForm(forms.ModelForm):
 
@@ -23,3 +28,13 @@ class ApplicationForm(forms.ModelForm):
         widgets = {
             'scope': forms.RadioSelect,
         }
+
+class UploadFileForm(forms.Form):
+    title = forms.CharField(max_length=50)
+    file = forms.FileField()
+
+class GradingForm(forms.ModelForm):
+
+    class Meta:
+        model = Grading
+        fields = ['first_question','second_question', 'third_question', 'fourth_question']

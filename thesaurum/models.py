@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 
 
@@ -42,3 +43,16 @@ class Application(models.Model):
             ('view_application', 'View application'),
             ('edit_application', 'Edit application'),
         )
+
+class Grading(models.Model):
+    application = models.ForeignKey(Application)
+    user = models.ForeignKey(User)
+    first_question = models.BooleanField(default=False)
+    second_question = models.BooleanField(default=False)
+    third_question = models.BooleanField(default=False)
+    fourth_question = models.BooleanField(default=False)
+
+class File(models.Model):
+    path = models.CharField(max_length=200, null=True, blank=True, default="")
+    name = models.CharField(max_length=200, null=True, blank=True, default="")
+    application = models.ForeignKey(Application, default= None)

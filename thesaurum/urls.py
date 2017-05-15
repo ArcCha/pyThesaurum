@@ -1,5 +1,8 @@
+import django
 from django.conf.urls import url
 from thesaurum import views
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     url(r'^$', views.index, name="index"),
@@ -11,4 +14,7 @@ urlpatterns = [
         views.application_details, name="application_details"),
     url(r'^applications/(?P<app_id>\d+)/submit$',
         views.application_submit, name="application_submit"),
-]
+    url(r'^applications/(?P<app_id>\d+)/upload/$', views.simple_upload, name="upload"),
+    url(r'^applications/(?P<app_id>\d+)/grade/$', views.grading_new, name="grading_new"),
+    url(r'^applications/(?P<app_id>\d+)/files/$', views.show_all_uploaded_files_for_application, name="files"),
+] + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
