@@ -199,7 +199,7 @@ def show_all_uploaded_files_for_application(request, app_id):
 def protected_serve(request, path, document_root=None, show_indexes=False):
     id_from_url = path.split('/')[0]
 
-    app_upload = Application.objects.get(id = id_from_url)
+    app_upload = get_object_or_404(Application, pk=id_from_url)
     apps = get_objects_for_user(request.user, 'thesaurum.view_application')
 
     flag = True
@@ -210,5 +210,5 @@ def protected_serve(request, path, document_root=None, show_indexes=False):
 
     if (flag):
         return render(request, '403.html', status=403)
-
+    
     return serve(request, path, settings.MEDIA_URL[1:] , show_indexes)
