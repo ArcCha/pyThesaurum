@@ -3,57 +3,42 @@
 
 - block body
   .container-fluid
-    .row
-      %form(method="post")
-        - csrf_token
-        .row
-          .col-sm-12
-            .form-group.label-floating
-            = form.cooperating_organizations.errors
-            %label(class="control-label") {{ first_question }}
-        .row
-          .col-sm-4
-            .form-group.checkbox
-              = form.third_question.errors
-              %label
-                - render_field form.first_question
-                Yes
-        .row
-          .col-sm-12
-            .form-group.label-floating
-            = form.cooperating_organizations.errors
-            %label(class="control-label") {{ second_question }}
-        .row
-          .col-sm-4
-            .form-group.checkbox
-              = form.third_question.errors
-              %label
-                - render_field form.second_question
-                Yes
-        .row
-          .col-sm-12
-            .form-group.label-floating
-            = form.cooperating_organizations.errors
-            %label(class="control-label") {{ third_question }}
-        .row
-          .col-sm-4
-            .form-group.checkbox
-              = form.third_question.errors
-              %label
-                - render_field form.third_question
-                Yes
-        .row
-          .col-sm-12
-            .form-group.label-floating
-            = form.cooperating_organizations.errors
-            %label(class="control-label") {{ fourth_question }}
-        .row
-          .col-sm-4
-            .form-group.checkbox
-              = form.third_question.errors
-              %label
-                - render_field form.fourth_question
-                Yes
-        .row
-          .col-sm-12.pull-right
-            %input(type="submit" class="btn btn-default" value="Submit")
+    %form(method="post")
+      - csrf_token
+      .row
+        .col-sm-12
+          .form-group.checkbox
+            = form.project_rational.errors
+            %label
+              - render_field form.project_rational
+              Project rational
+      .row
+        .col-sm-12
+          .form-group.checkbox
+            = form.project_justified.errors
+            %label
+              - render_field form.project_justified
+              Project justified
+      .row
+        .col-sm-12
+          .form-group.checkbox
+            = form.cost_rational.errors
+            %label
+              - render_field form.cost_rational
+              Cost rational
+      .row
+        .col-sm-12
+          .form-group.checkbox
+            = form.cost_justified.errors
+            %label
+              - render_field form.cost_justified
+              Cost justified
+      .row
+        .col-sm-12
+          .form-group.label-floating
+            = form.comment.errors
+            %label
+              - render_field form.comment class+="form-control"
+      .row
+        .col-sm-12.pull-right
+          %input(type="submit" class="btn btn-default" value="Submit")

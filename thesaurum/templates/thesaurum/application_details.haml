@@ -2,17 +2,23 @@
 - load guardian_tags
 
 .container-fluid
-  .row
-    .col-sm-12
-      - block body
-        - get_obj_perms user for app as "app_perms"
+  - block body
+    - get_obj_perms user for app as "app_perms"
+    .row
+      .col-sm-12
         %h4.pull-right
           = app.state
-        - include 'thesaurum/application_form_body.haml'
-	%p Uploaded files:
+    - include 'thesaurum/application_form_body.haml'
+    .row
+      .col-sm-12
+        %h4 Uploaded files:
           - for file in  files
-            %a(href="/{{ file.path }}")
-              = file.name
+            .row
+              .col-sm-12
+                %a(href="/{{ file.path }}")
+                  = file.name
+    .row
+      .col-sm-12
         - if app.state == 'new'
           - if "change_application" in app_perms
             %a(href="{% url 'application_edit' app.id %}" class="btn btn-default") Edit

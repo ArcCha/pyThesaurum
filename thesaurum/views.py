@@ -48,6 +48,7 @@ def application_edit(request, app_id=None):
             app.owner = owner
             app.save()
             assign_perm('view_application', owner, app)
+            assign_perm('change_application', owner, app)
             return HttpResponseRedirect(reverse('application_list'))
     else:
         form = ApplicationForm(instance=app)
@@ -69,10 +70,10 @@ def application_grade(request, app_id):
 
     return render(request, 'thesaurum/grading_new.haml', {
         'form': form,
-        'first_question': 'Pytanie 1',
-        'second_question': 'Pytanie 2',
-        'third_question': 'Pytanie 3',
-        'fourth_question': 'Pytanie 4'
+        'project_rational': 'Pytanie 1',
+        'project_justified': 'Pytanie 2',
+        'cost_rational': 'Pytanie 3',
+        'cost_justified': 'Pytanie 4'
     })
 
 
@@ -146,17 +147,14 @@ def simple_upload(request, app_id):
             file_ob.path = "uploads/" + app_id + "/" + filename
             file_ob.name = filename
             file_ob.save()
-            return render(request, 'simple_upload.html', {
-                'uploaded_file_url': uploaded_file_url,
-                'file_name': myfile.name,
-                'files': files
-            })
+            return HttpResponseRedirect(reverse('application_details', args=[app_id]))
         else:
             return render(request, 'simple_upload.html', {
                 'files': files,
                 'errors': "Please choose a file"
             })
     return render(request, 'simple_upload.html', {'files': files})
+
 
 @login_required
 def application_submit(request, app_id):
@@ -165,6 +163,7 @@ def application_submit(request, app_id):
     app.save()
     return HttpResponseRedirect(reverse('application_details', args=[app.id]))
 
+
 @login_required
 def show_all_uploaded_files_for_application(request, app_id):
     files = File.objects.filter(application = Application.objects.get(id = app_id)).values()
@@ -172,6 +171,7 @@ def show_all_uploaded_files_for_application(request, app_id):
     return render(request, 'thesaurum/files_list.haml', {
         'files': files,
     })
+
 
 @login_required
 def protected_serve(request, path, document_root=None, show_indexes=False):
