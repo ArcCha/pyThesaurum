@@ -8,6 +8,10 @@ from django.contrib.auth.models import User
 from django.views.static import serve
 from guardian.shortcuts import assign_perm, get_objects_for_user
 from django.urls import reverse
+from django.core.exceptions import PermissionDenied
+from guardian.shortcuts import get_perms
+from django.shortcuts import get_object_or_404
+
 
 from pyThesaurum import settings
 from thesaurum.models import Application, File, Grading
@@ -29,14 +33,18 @@ def index(request):
 def userPage(request):
     form = ApplicationForm()
     return render(request, 'thesaurum/mypage.haml', {
-                  'form': form,
-                  })
+        'form': form,
+    })
 
 
 @login_required
 def application_edit(request, app_id=None):
     if app_id:
-        app = Application.objects.get(pk=app_id)
+        app = get_object_or_404(Application, pk=app_id)
+        if 'change_application' not in get_perms(request.user, app):
+            raise PermissionDenied
+        if app.state is not 'new':
+            raise PermissionDenied
     else:
         app = Application()
     if request.method == 'POST':
@@ -57,12 +65,17 @@ def application_edit(request, app_id=None):
 
 @login_required
 def application_grade(request, app_id):
+    app = get_object_or_404(Application, pk=app_id)
+    if 'grade_application' in get_perms(request.user, app):
+        raise PermissionDenied
+    if app.state is not 'accepted':
+        raise PermissionDenied
     if request.method == 'POST':
         form = GradingForm(request.POST)
         if form.is_valid():
             grading = form.save(commit=False)
             grading.user = request.user
-            grading.application = Application.objects.get(pk=app_id)
+            grading.application = app
             grading.save()
             return HttpResponseRedirect(reverse('index'))
     else:
@@ -87,8 +100,8 @@ def application_list(request):
 
 @login_required
 def application_details(request, app_id):
-    files = File.objects.filter(application=Application.objects.get(id=app_id)).values()
-    app = Application.objects.get(pk=app_id)
+    app = get_object_or_404(Application, pk=app_id)
+    files = File.objects.filter(application=app).values()
     form = ApplicationForm(instance=app)
     can_grade = not Grading.objects.filter(user=request.user, application=app).exists()
     for b in form:
@@ -103,7 +116,9 @@ def application_details(request, app_id):
 
 @login_required
 def application_accept(request, app_id):
-    app = Application.objects.get(pk=app_id)
+    app = get_object_or_404(Application, pk=app_id)
+    if app.state is not 'submitted':
+        raise PermissionDenied
     app.state = 'accepted'
     app.save()
     return HttpResponseRedirect(reverse('application_details', args=[app_id]))
@@ -111,7 +126,9 @@ def application_accept(request, app_id):
 
 @login_required
 def application_return_back(request, app_id):
-    app = Application.objects.get(pk=app_id)
+    app = get_object_or_404(Application, pk=app_id)
+    if app.state is not 'submitted':
+        return PermissionDenied
     app.state = 'new'
     app.save()
     return HttpResponseRedirect(reverse('application_details', args=[app_id]))
@@ -134,6 +151,9 @@ def application_grades(request, app_id):
 @login_required
 def simple_upload(request, app_id):
     # form = Form(request.POST)
+    app = get_object_or_404(Application, pk=app_id)
+    if 'change_application' not in get_perms(request.user, app):
+        raise PermissionDenied
     files = File.objects.filter(application=Application.objects.get(id=app_id)).values()
     if request.method == 'POST':
         if 'myfile' in request.FILES.keys() and Form(request.POST).is_valid():
@@ -143,7 +163,7 @@ def simple_upload(request, app_id):
             uploaded_file_url = fs.url(filename)
             print("uploads/" + app_id + "/" + filename)
             file_ob = File()
-            file_ob.application = Application.objects.get(id = app_id)
+            file_ob.application = app
             file_ob.path = "uploads/" + app_id + "/" + filename
             file_ob.name = filename
             file_ob.save()
@@ -158,7 +178,9 @@ def simple_upload(request, app_id):
 
 @login_required
 def application_submit(request, app_id):
-    app = Application.objects.get(pk=app_id)
+    app = get_object_or_404(Application, pk=app_id)
+    if app.state is not 'new':
+        raise PermissionDenied
     app.state = 'submitted'
     app.save()
     return HttpResponseRedirect(reverse('application_details', args=[app.id]))
