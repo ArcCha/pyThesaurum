@@ -43,7 +43,7 @@ def application_edit(request, app_id=None):
         app = get_object_or_404(Application, pk=app_id)
         if 'change_application' not in get_perms(request.user, app):
             raise PermissionDenied
-        if app.state is not 'new':
+        if app.state != 'new':
             raise PermissionDenied
     else:
         app = Application()
@@ -66,9 +66,9 @@ def application_edit(request, app_id=None):
 @login_required
 def application_grade(request, app_id):
     app = get_object_or_404(Application, pk=app_id)
-    if 'grade_application' in get_perms(request.user, app):
+    if not request.user.has_perm('thesaurum.grade_application'):
         raise PermissionDenied
-    if app.state is not 'accepted':
+    if app.state != 'accepted':
         raise PermissionDenied
     if request.method == 'POST':
         form = GradingForm(request.POST)
@@ -104,6 +104,7 @@ def application_details(request, app_id):
     files = File.objects.filter(application=app).values()
     form = ApplicationForm(instance=app)
     can_grade = not Grading.objects.filter(user=request.user, application=app).exists()
+    can_grade = can_grade and request.user.has_perm('thesaurum.grade_application')
     for b in form:
         b.field.widget.attrs['disabled'] = True
     return render(request, 'thesaurum/application_details.haml', {
@@ -117,7 +118,7 @@ def application_details(request, app_id):
 @login_required
 def application_accept(request, app_id):
     app = get_object_or_404(Application, pk=app_id)
-    if app.state is not 'submitted':
+    if app.state != 'submitted':
         raise PermissionDenied
     app.state = 'accepted'
     app.save()
@@ -127,7 +128,7 @@ def application_accept(request, app_id):
 @login_required
 def application_return_back(request, app_id):
     app = get_object_or_404(Application, pk=app_id)
-    if app.state is not 'submitted':
+    if app.state != 'submitted':
         return PermissionDenied
     app.state = 'new'
     app.save()
@@ -179,7 +180,7 @@ def simple_upload(request, app_id):
 @login_required
 def application_submit(request, app_id):
     app = get_object_or_404(Application, pk=app_id)
-    if app.state is not 'new':
+    if app.state != 'new':
         raise PermissionDenied
     app.state = 'submitted'
     app.save()

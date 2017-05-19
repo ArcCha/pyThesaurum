@@ -28,3 +28,5 @@ urlpatterns = [
         views.show_all_uploaded_files_for_application, name="files"),
     url(r'^uploads/(?P<path>.*)$', views.protected_serve),
 ]
+
+handler404 = 'thesaurum.views.handler404'

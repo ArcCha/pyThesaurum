@@ -122,4 +122,5 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')# and are trying to access pages r
 
 with open(BASE_DIR + '/pyThesaurum/local_settings.py', 'r') as f:
     exec(f.read())
-
+# DEBUG = False
+# ALLOWED_HOSTS = ['localhost']
