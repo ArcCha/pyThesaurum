@@ -6,7 +6,6 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     url(r'^$', views.index, name="index"),
-    url(r'^applications/$', views.application_list, name="application_list"),
     url(r'^applications/new$', views.application_edit, name="application_new"),
     url(r'^applications/(?P<app_id>\d+)/edit$',
         views.application_edit, name="application_edit"),

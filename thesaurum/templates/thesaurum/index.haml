@@ -1,30 +1,103 @@
 - extends "base.html"
 - load guardian_tags
 
-.container-fluid
-  .row
-    .col-sm-12
-      - block body
-        %h2 Dashboard
-          %a(href="{% url 'application_new' %}" class="btn btn-primary") Create application
-        - if perms.thesaurum.change_application_state
-          %h2 Submitted applications
-            %ul
-              - for app in submitted_apps
-                %li
-                  %a(href="{% url 'application_details' app.id %}")
-                    = app.name
-        - if perms.thesaurum.grade_application
-          %h2 Applications to grade
-            %ul
-              - for app in to_grade_apps
-                %li
-                  %a(href="{% url 'application_details' app.id %}")
-                    = app.name
-        - if perms.thesaurum.view_grading
-          %h2 Application grades
-            %ul
-              - for app in graded_apps
-                %li
-                  %a(href="{% url 'application_grades' app.id %}")
-                    = app.name
+- block body
+  .container-fluid
+    .row
+      .col-lg-6.col-md-12
+        .card.card-nav-tabs
+          .card-header(data-background-color="orange")
+            .nav-tabs-navigation
+              .nav-tabs-wrapper
+                .nav-tabs-title
+                  Applications
+                %ul.nav.nav-tabs(data-tabs="tabs")
+                  %li.active
+                    %a(href="#your-applications" data-toggle="tab")
+                      %i.material-icons bug_report
+                      Your
+                      .ripple-container
+                  - if perms.thesaurum.change_application_state
+                    %li
+                      %a(href="#submitted" data-toggle="tab")
+                        %i.material-icons bug_report
+                        Submitted
+                        .ripple-container
+                  - if perms.thesaurum.grade_application
+                    %li
+                      %a(href="#to-grade" data-toggle="tab")
+                        %i.material-icons bug_report
+                        To grade
+                        .ripple-container
+                  - if perms.thesaurum.view_grading
+                    %li
+                      %a(href="#grades" data-toggle="tab")
+                        %i.material-icons bug_report
+                        Grades
+                        .ripple-container
+          .card-content
+            .tab-content
+              #your-applications.tab-pane.active
+                .table-responsive
+                  %table.table.table-hover  
+                    %thead.text-warning
+                      %th Name
+                    %tbody
+                      - for app in your_apps
+                        %tr
+                          %td
+                            %a(href="{% url 'application_details' app.id %}")
+                              = app.name
+                .pull-right
+                  %a(href="{% url 'application_new' %}" class="btn btn-primary") Create application
+              - if perms.thesaurum.change_application_state
+                #submitted.tab-pane
+                  .table-responsive
+                    %table.table.table-hover  
+                      %thead.text-warning
+                        %th Name
+                      %tbody
+                        - for app in submitted_apps
+                          %tr
+                            %td
+                              %a(href="{% url 'application_details' app.id %}")
+                                = app.name
+              - if perms.thesaurum.grade_application
+                #to-grade.tab-pane
+                  .table-responsive
+                    %table.table.table-hover
+                      %thead.text-warning
+                        %th Name
+                      %tbody
+                        - for app in to_grade_apps
+                          %tr
+                            %td
+                              %a(href="{% url 'application_details' app.id %}")
+                                = app.name
+              - if perms.thesaurum.view_grading
+                #grades.tab-pane
+                  .table-responsive
+                    %table.table.table-hover
+                      %thead.text-warning
+                        %th Name
+                      %tbody
+                        - for app in graded_apps
+                          %tr
+                            %td
+                              %a(href="{% url 'application_grades' app.id %}")
+                                = app.name
+
+
+/ .card.card-nav-tabs
+/           .card-header(data-background-color="orange")
+/             %h4.title Applications
+/               %p.category Tararara
+/           .card-content.table-responsive
+/             %table.table.table-hover  
+/               %thead.text-warning
+/                 %th Name
+/               %tbody
+/                 - for app in submitted_apps
+/                   %tr
+/                     %td
+/                       = app.name

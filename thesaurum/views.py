@@ -19,10 +19,13 @@ from .forms import ApplicationForm, GradingForm
 
 
 def index(request):
+    your_apps = get_objects_for_user(request.user,
+                                     'thesaurum.view_application')
     submitted_apps = Application.objects.filter(state='submitted')
     to_grade_apps = Application.objects.filter(state='accepted')
     graded_apps = Application.objects.filter(state='accepted')
     return render(request, 'thesaurum/index.haml', {
+        'your_apps': your_apps,
         'submitted_apps': submitted_apps,
         'to_grade_apps': to_grade_apps,
         'graded_apps': graded_apps,
@@ -57,7 +60,7 @@ def application_edit(request, app_id=None):
             app.save()
             assign_perm('view_application', owner, app)
             assign_perm('change_application', owner, app)
-            return HttpResponseRedirect(reverse('application_list'))
+            return HttpResponseRedirect(reverse('index'))
     else:
         form = ApplicationForm(instance=app)
     return render(request, 'thesaurum/application_edit.haml', {'form': form})
@@ -87,14 +90,6 @@ def application_grade(request, app_id):
         'project_justified': 'Pytanie 2',
         'cost_rational': 'Pytanie 3',
         'cost_justified': 'Pytanie 4'
-    })
-
-
-@login_required
-def application_list(request):
-    apps = get_objects_for_user(request.user, 'thesaurum.view_application')
-    return render(request, 'thesaurum/application_list.haml', {
-        'apps': apps,
     })
 
 
