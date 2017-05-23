@@ -27,6 +27,8 @@ urlpatterns = [
     url(r'^applications/(?P<app_id>\d+)/files/$',
         views.show_all_uploaded_files_for_application, name="files"),
     url(r'^uploads/(?P<path>.*)$', views.protected_serve),
+    url(r'^delete/(?P<app_id>\d+)$',
+        views.delete, name="delete"),
 ]
 
 handler404 = 'thesaurum.views.handler404'
