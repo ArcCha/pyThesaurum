@@ -14,25 +14,25 @@
                 %ul.nav.nav-tabs(data-tabs="tabs")
                   %li.active
                     %a(href="#your-applications" data-toggle="tab")
-                      %i.material-icons bug_report
+                      %i.material-icons description
                       Your
                       .ripple-container
                   - if perms.thesaurum.change_application_state
                     %li
                       %a(href="#submitted" data-toggle="tab")
-                        %i.material-icons bug_report
+                        %i.material-icons description
                         Submitted
                         .ripple-container
                   - if perms.thesaurum.grade_application
                     %li
                       %a(href="#to-grade" data-toggle="tab")
-                        %i.material-icons bug_report
+                        %i.material-icons description
                         To grade
                         .ripple-container
                   - if perms.thesaurum.view_grading
                     %li
                       %a(href="#grades" data-toggle="tab")
-                        %i.material-icons bug_report
+                        %i.material-icons description
                         Grades
                         .ripple-container
           .card-content

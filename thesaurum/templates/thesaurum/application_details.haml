@@ -4,19 +4,26 @@
 .container-fluid
   - block body
     - get_obj_perms user for app as "app_perms"
-    .row
-      .col-sm-12
-        %h4.pull-right
-          = app.state
-    - include 'thesaurum/application_form_body.haml'
-    .row
-      .col-sm-12
-        %h4 Uploaded files:
-          - for file in  files
-            .row
-              .col-sm-12
-                %a(href="/{{ file.path }}")
-                  = file.name
+    .card
+      .card-content
+        .row
+          .col-sm-12
+            %h4.pull-right
+              = app.state
+        - include 'thesaurum/application_form_body.haml'
+    .card
+      .card-header(data-background-color="orange")
+        .title
+          Uploaded files
+      .card-content
+        .row
+          .col-sm-12
+            %h4 Uploaded files:
+              - for file in  files
+                .row
+                  .col-sm-12
+                    %a(href="/{{ file.path }}")
+                      = file.name
     .row
       .col-sm-12
         - if app.state == 'new'
