@@ -145,34 +145,6 @@ def application_grades(request, app_id):
 
 
 @login_required
-def simple_upload(request, app_id):
-    # form = Form(request.POST)
-    app = get_object_or_404(Application, pk=app_id)
-    if 'change_application' not in get_perms(request.user, app):
-        raise PermissionDenied
-    files = File.objects.filter(application=Application.objects.get(id=app_id)).values()
-    if request.method == 'POST':
-        if 'myfile' in request.FILES.keys() and Form(request.POST).is_valid():
-            myfile = request.FILES['myfile']
-            fs = FileSystemStorage(location='uploads/' + app_id)
-            filename = fs.save(myfile.name, myfile)
-            uploaded_file_url = fs.url(filename)
-            print("uploads/" + app_id + "/" + filename)
-            file_ob = File()
-            file_ob.application = app
-            file_ob.path = "uploads/" + app_id + "/" + filename
-            file_ob.name = filename
-            file_ob.save()
-            return HttpResponseRedirect(reverse('application_details', args=[app_id]))
-        else:
-            return render(request, 'simple_upload.html', {
-                'files': files,
-                'errors': "Please choose a file"
-            })
-    return render(request, 'simple_upload.html', {'files': files})
-
-
-@login_required
 def application_submit(request, app_id):
     app = get_object_or_404(Application, pk=app_id)
     if app.state != 'new':
@@ -208,3 +180,41 @@ def protected_serve(request, path, document_root=None, show_indexes=False):
         return render(request, '403.html', status=403)
     
     return serve(request, path, settings.MEDIA_URL[1:] , show_indexes)
+
+@login_required
+def delete(request, app_id):
+    print(request.POST.get('docfile'))
+    if request.method == 'POST':
+        file = get_object_or_404(File, path=request.POST.get('docfile'))
+        file.delete()
+        path = request.POST.get('docfile')
+        fs = FileSystemStorage(location='uploads/' + path.split('/')[1])
+        fs.delete(path.split('/')[2])
+    return HttpResponseRedirect(reverse('application_details', args=[app_id]))
+
+@login_required
+def simple_upload(request, app_id):
+    # form = Form(request.POST)
+    app = get_object_or_404(Application, pk=app_id)
+    if 'change_application' not in get_perms(request.user, app):
+        raise PermissionDenied
+    files = File.objects.filter(application=Application.objects.get(id=app_id)).values()
+    if request.method == 'POST':
+        if 'myfile' in request.FILES.keys() and Form(request.POST).is_valid():
+            myfile = request.FILES['myfile']
+            fs = FileSystemStorage(location='uploads/' + app_id)
+            filename = fs.save(myfile.name, myfile)
+            uploaded_file_url = fs.url(filename)
+            print("uploads/" + app_id + "/" + filename)
+            file_ob = File()
+            file_ob.application = app
+            file_ob.path = "uploads/" + app_id + "/" + filename
+            file_ob.name = filename
+            file_ob.save()
+            return HttpResponseRedirect(reverse('application_details', args=[app_id]))
+        else:
+            return render(request, 'simple_upload.html', {
+                'files': files,
+                'errors': "Please choose a file"
+            })
+    return render(request, 'simple_upload.html', {'files': files})

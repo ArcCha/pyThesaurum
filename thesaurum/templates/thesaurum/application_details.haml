@@ -24,6 +24,10 @@
                   .col-sm-12
                     %a(href="/{{ file.path }}")
                       = file.name
+                    %form{:action => "{% url 'delete' app.id %}", :enctype => "multipart/form-data", :method => "post"}
+                      {% csrf_token %}
+                      %input{:name => "docfile", :type => "hidden", :value => "{{ file.path }}"}/
+                      %input{:class => "btn btn-default", :type => "submit", :value => "Delete"}/
     .row
       .col-sm-12
         - if app.state == 'new'
