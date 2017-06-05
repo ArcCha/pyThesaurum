@@ -1,5 +1,6 @@
 - extends 'base.html'
 - load guardian_tags
+- load widget_tweaks
 
 .container-fluid
   - block body
@@ -21,13 +22,15 @@
             %h4 Uploaded files:
               - for file in  files
                 .row
-                  .col-sm-12
+                  .col-sm-11
                     %a(href="/{{ file.path }}")
                       = file.name
-                    %form{:action => "{% url 'delete' app.id %}", :enctype => "multipart/form-data", :method => "post"}
-                      {% csrf_token %}
-                      %input{:name => "docfile", :type => "hidden", :value => "{{ file.path }}"}/
-                      %input{:class => "btn btn-default", :type => "submit", :value => "Delete"}/
+                  - if "change_application" in app_perms
+                    .col-sm-1  
+                      %form{:action => "{% url 'delete' app.id %}", :enctype => "multipart/form-data", :method => "post"}
+                        {% csrf_token %}
+                        %input{:name => "docfile", :type => "hidden", :value => "{{ file.path }}"}/
+                        %input{:class => "btn btn-default", :type => "submit", :value => "Delete"}/
     .row
       .col-sm-12
         - if app.state == 'new'
@@ -42,5 +45,40 @@
         - if app.state == "submitted" and perms.thesaurum.change_application_state
           %a(href="{% url 'application_accept' app.id %}" class="btn btn-default") Accept
           %a(href="{% url 'application_return_back' app.id %}" class="btn btn-default") Return back
+        - if perms.thesaurum.change_application_state
+          %button(type="button" class="btn btn-default" data-toggle="modal" data-target="#contact-modal")
+            Email owner
+          #contact-modal.modal.fade(tabindex="-1" role="dialog")
+            .modal-dialog(role="document")
+              .modal-content
+                .modal-header
+                  %h5.modal-title
+                    Email application owner
+                .modal-body
+                  %form(method="post" action="{% url 'application_email_owner' app.id %}")
+                    - csrf_token
+                    .row
+                      .col-sm-12
+                        = contact_form.non_field_errors
+                    .row
+                      .col-sm-12
+                        .form-group.label-floating
+                          = contact_form.title.errors
+                          %label(class="control-label") Title
+                          - render_field contact_form.title class+="form-control"
+                    .row
+                      .col-sm-12
+                        .form-group.label-floating
+                          = contact_form.message.errors
+                          %label(class="control-label") Message
+                          - render_field contact_form.message class+="form-control"
+                    .row
+                      .modal-footer
+                        %button(type="button" class="btn btn-secondary" data-dismiss="modal") Close
+                        %button(type="submit" class="btn btn-primary") Email
         - if app.state == "accepted" and can_grade
           %a(href="{% url 'application_grade' app.id %}" class="btn btn-default") Grade
+
+- block scripts
+  %script
+    $('.modal').appendTo("body");

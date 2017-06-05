@@ -34,6 +34,11 @@
               - render_field form.cost_justified
               Cost justified
       .row
+        - for radio in form.vote
+          .col-sm-4
+            .form-group.radio
+              - render_field radio
+      .row
         .col-sm-4
           .form-group.label-floating
             = form.comment.errors

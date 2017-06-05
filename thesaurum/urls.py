@@ -25,6 +25,8 @@ urlpatterns = [
         views.application_grades, name="application_grades"),
     url(r'^applications/(?P<app_id>\d+)/files/$',
         views.show_all_uploaded_files_for_application, name="files"),
+    url(r'^applications/(?P<app_id>\d+)/email_owner/$',
+        views.application_email_owner, name="application_email_owner"),
     url(r'^uploads/(?P<path>.*)$', views.protected_serve),
     url(r'^delete/(?P<app_id>\d+)$',
         views.delete, name="delete"),

@@ -1,9 +1,9 @@
 from django.core.files.storage import FileSystemStorage
 from django.forms import Form
 from django.http import HttpResponseRedirect
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import render
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponseServerError
 from django.contrib.auth.models import User
 from django.views.static import serve
 from guardian.shortcuts import assign_perm, get_objects_for_user
@@ -11,11 +11,13 @@ from django.urls import reverse
 from django.core.exceptions import PermissionDenied
 from guardian.shortcuts import get_perms
 from django.shortcuts import get_object_or_404
+from django.views.decorators.http import require_POST
+from django.core.mail import send_mail
 
 
 from pyThesaurum import settings
 from thesaurum.models import Application, File, Grading
-from .forms import ApplicationForm, GradingForm
+from .forms import ApplicationForm, GradingForm, ContactForm
 
 
 def index(request):
@@ -98,6 +100,7 @@ def application_details(request, app_id):
     app = get_object_or_404(Application, pk=app_id)
     files = File.objects.filter(application=app).values()
     form = ApplicationForm(instance=app)
+    contact_form = ContactForm(initial={'title': app.name})
     can_grade = not Grading.objects.filter(user=request.user, application=app).exists()
     can_grade = can_grade and request.user.has_perm('thesaurum.grade_application')
     for b in form:
@@ -107,6 +110,7 @@ def application_details(request, app_id):
         'app': app,
         'can_grade': can_grade,
         'files': files,
+        'contact_form': contact_form,
     })
 
 
@@ -141,6 +145,9 @@ def application_grades(request, app_id):
         'project_justified': Grading.objects.filter(application__id=app_id, project_justified=True).count(),
         'cost_rational': Grading.objects.filter(application__id=app_id, cost_rational=True).count(),
         'cost_justified': Grading.objects.filter(application__id=app_id, cost_justified=True).count(),
+        'in_favor': Grading.objects.filter(application__id=app_id, vote='in_favor').count(),
+        'abstain': Grading.objects.filter(application__id=app_id, vote='abstain').count(),
+        'against': Grading.objects.filter(application__id=app_id, vote='against').count(),
     })
 
 
@@ -155,8 +162,29 @@ def application_submit(request, app_id):
 
 
 @login_required
+@require_POST
+@user_passes_test(lambda u: u.has_perm('thesaurum.change_application_state'))
+def application_email_owner(request, app_id):
+    app = get_object_or_404(Application, pk=app_id)
+    owner = app.owner
+    contact_form = ContactForm(request.POST)
+    if contact_form.is_valid():
+        title = contact_form.cleaned_data['title']
+        message = contact_form.cleaned_data['message']
+        send_mail(
+            title,
+            message,
+            request.user.email,
+            [owner.email],
+            fail_silently=False)
+        return HttpResponseRedirect(reverse('application_details',
+                                            args=[app.id]))
+    return HttpResponseServerError()
+
+
+@login_required
 def show_all_uploaded_files_for_application(request, app_id):
-    files = File.objects.filter(application = Application.objects.get(id = app_id)).values()
+    files = File.objects.filter(application=Application.objects.get(id=app_id)).values()
     print(files)
     return render(request, 'thesaurum/files_list.haml', {
         'files': files,

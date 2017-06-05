@@ -37,6 +37,13 @@
             #cost-justified.ct-chart
           .card-content
             %h4.title Cost justified
+    .row
+      .col-sm-12
+        .card
+          .card-header.card-chart
+            #votes.ct-chart
+          .card-content
+            %h4.title Votes
 
 - block scripts
   %script
@@ -57,6 +64,10 @@
         labels: ['Yes', 'No'],
         series: [ {{ cost_justified }}, {{ grades_count|subtract:cost_justified }}]
       };
+      var q5_data = {
+        labels: ['In favor', 'Abstain', 'Against'],
+        series: [ {{ in_favor }}, {{ abstain }}, {{ against }}]
+      }
 
       var options = {
         labelInterpolationFnc: function(value) {
@@ -83,4 +94,5 @@
       new Chartist.Pie('#project-justified', q2_data, options, responsiveOptions);
       new Chartist.Pie('#cost-rational', q3_data, options, responsiveOptions);
       new Chartist.Pie('#cost-justified', q4_data, options, responsiveOptions);
+      new Chartist.Pie('#votes', q5_data, options, responsiveOptions);
     });

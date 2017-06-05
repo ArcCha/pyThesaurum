@@ -52,12 +52,18 @@ class Application(models.Model):
 
 
 class Grading(models.Model):
+    VOTE = [('in_favor', 'In favor'),
+            ('abstain', 'Abstain'),
+            ('against', 'Against')]
+
     application = models.ForeignKey(Application)
     user = models.ForeignKey(User)
     project_rational = models.BooleanField(default=False)
     project_justified = models.BooleanField(default=False)
     cost_rational = models.BooleanField(default=False)
     cost_justified = models.BooleanField(default=False)
+    vote = models.CharField(max_length=10, choices=VOTE, null=False,
+                            default='abstain')
     comment = models.TextField()
 
     class Meta:

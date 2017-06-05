@@ -34,4 +34,16 @@ class GradingForm(forms.ModelForm):
 
     class Meta:
         model = Grading
-        fields = ['project_rational', 'project_justified', 'cost_rational', 'cost_justified', 'comment']
+        fields = ['project_rational', 'project_justified',
+                  'cost_rational', 'cost_justified', 'vote',
+                  'comment']
+        widgets = {
+            'vote': forms.RadioSelect,
+        }
+
+
+class ContactForm(forms.Form):
+    title = forms.CharField(
+        widget=forms.TextInput(attrs={'label': 'Title '}))
+    message = forms.CharField(
+        widget=forms.Textarea(attrs={'label': 'Message'}))
